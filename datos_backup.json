@@ -1,0 +1,18 @@
+[
+    {
+        "_id": {
+            "$oid": "693ae46b98d09ee701a30386"
+        },
+        "producto": "Pixel 10",
+        "cantidad": 2,
+        "ingresos": 1500.0
+    },
+    {
+        "_id": {
+            "$oid": "693ae48298d09ee701a30387"
+        },
+        "producto": "Port\u00e1til",
+        "cantidad": 1,
+        "ingresos": 899.0
+    }
+]
