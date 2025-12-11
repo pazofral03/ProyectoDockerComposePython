@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Servicio 1: Nuestra App Python
+  viz-app:
+    build: .
+    container_name: dashboard_python
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo  # Espera a que mongo inicie antes de arrancar este servicio
+    env_file:
+      - .env  # Docker leerá el archivo y lo inyectará como variables
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/  # Variable de entorno para conectar
+
+  # Servicio 2: Base de datos MongoDB
+  mongo:
+    image: mongo:latest
+    container_name: mi_base_de_datos
+    ports:
+      - "27017:27017" # Exponemos el puerto por si quieres conectarte con MongoDB Compass desde tu PC
+    volumes:
+      - mongo_data:/data/db # Persistencia: los datos no se borran al apagar Docker
+
+# Definición del volumen para la persistencia de datos
+volumes:
+  mongo_data:

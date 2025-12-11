@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="row mb-4">
+    <div class="col-12 text-end">
+        <a href="/sincronizar" class="btn btn-dark">
+            ☁️ Crear Backup y Subir a GitHub
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">Agregar Venta</div>
+            <div class="card-body">
+                <form action="/agregar" method="POST">
+                    <div class="mb-3">
+                        <label>Producto</label>
+                        <input type="text" name="producto" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Cantidad</label>
+                        <input type="number" name="cantidad" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Ingresos ($)</label>
+                        <input type="number" name="ingresos" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Guardar en MongoDB</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">Datos Actuales</div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Ingresos</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for venta in ventas %}
+                        <tr>
+                            <td>{{ venta.producto }}</td>
+                            <td>{{ venta.cantidad }}</td>
+                            <td>{{ venta.ingresos }}</td>
+                            <td>
+                                <a href="/eliminar/{{ venta._id }}" class="btn btn-danger btn-sm">X</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">Vacío</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

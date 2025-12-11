@@ -1,0 +1,15 @@
+# Archivos de sistema y Python
+__pycache__/
+*.pyc
+
+# Entornos virtuales (por si acaso creas uno local)
+venv/
+.env
+
+# Carpetas de datos de Docker (¡MUY IMPORTANTE!)
+# Esto evita que subamos los gigas de la base de datos binaria de Mongo
+mongo_data/
+
+.env
+
+# No ignoramos 'backup.json' porque ese ES el archivo que queremos sincronizar

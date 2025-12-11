@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-center">
+        <h1 class="display-5">Dashboard de Ventas</h1>
+        <p class="lead">Visualización generada con Matplotlib basada en datos reales de MongoDB.</p>
+    </div>
+</div>
+
+<div class="card shadow-sm mt-4">
+    <div class="card-body text-center">
+        {% if plot_url %}
+            <img src="data:image/png;base64,{{ plot_url }}" class="img-fluid" alt="Gráfico de Ventas">
+        {% else %}
+            <div class="alert alert-warning">No hay suficientes datos para generar gráficos. Ve a "Gestión de Datos".</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
