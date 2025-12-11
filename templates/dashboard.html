@@ -1,10 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div class="row mb-4">
     <div class="col-12 text-center">
         <h1 class="display-5">Dashboard Ejecutivo</h1>
-        <p class="text-muted">Análisis de ventas con KPIs y Evolución Temporal</p>
+        <p class="text-muted">Análisis de ventas con KPIs y evolución temporal</p>
+    </div>
+</div>
+
+<div class="card bg-light mb-4 shadow-sm">
+    <div class="card-body py-2">
+        <form action="/" method="GET" class="row g-3 align-items-center justify-content-center">
+
+            <div class="col-auto">
+                <span class="fw-bold text-secondary">🔍 Filtros:</span>
+            </div>
+
+            <div class="col-auto">
+                <select name="tiempo" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="todo" {% if filtro_tiempo=='todo' %}selected{% endif %}>📅 Histórico Completo
+                    </option>
+                    <option value="30dias" {% if filtro_tiempo=='30dias' %}selected{% endif %}>📅 Últimos 30 días
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-auto">
+                <select name="orden" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="cantidad" {% if filtro_orden=='cantidad' %}selected{% endif %}>📊 Ordenar Barras:
+                        Cantidad</option>
+                    <option value="ingresos" {% if filtro_orden=='ingresos' %}selected{% endif %}>💲 Ordenar Barras:
+                        Rentabilidad</option>
+                </select>
+            </div>
+
+            <div class="col-auto border-start ps-3"></div>
+
+            <div class="col-auto">
+                <a href="/reporte_pdf?tiempo={{ filtro_tiempo }}&orden={{ filtro_orden }}"
+                    class="btn btn-danger btn-sm shadow-sm">
+                    📄 Descargar PDF
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -14,7 +53,7 @@
         <div class="card text-white bg-primary mb-3 shadow">
             <div class="card-header">Ingreso Total</div>
             <div class="card-body">
-                <h2 class="card-title">${{ kpis.total_ingresos }}</h2>
+                <h2 class="card-title">{{ kpis.total_ingresos }} €</h2>
             </div>
         </div>
     </div>
@@ -22,7 +61,7 @@
         <div class="card text-white bg-success mb-3 shadow">
             <div class="card-header">Ticket Medio</div>
             <div class="card-body">
-                <h2 class="card-title">${{ kpis.ticket_medio }}</h2>
+                <h2 class="card-title">{{ kpis.ticket_medio }} €</h2>
             </div>
         </div>
     </div>
@@ -36,14 +75,50 @@
     </div>
 </div>
 {% endif %}
-<div class="card shadow-sm">
-    <div class="card-body text-center p-0">
-        {% if plot_url %}
-        <img src="data:image/png;base64,{{ plot_url }}" class="img-fluid" alt="Gráfico de Ventas">
-        {% else %}
-        <div class="alert alert-warning m-4">No hay datos suficientes. Ve a Gestión y añade ventas con fechas
-            diferentes.</div>
-        {% endif %}
+
+{% if plot_barras %}
+<div class="row">
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <img src="data:image/png;base64,{{ plot_barras }}" class="img-fluid" alt="Gráfico Barras">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <img src="data:image/png;base64,{{ plot_tarta }}" class="img-fluid" alt="Gráfico Tarta">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <img src="data:image/png;base64,{{ plot_pareto }}" class="img-fluid" alt="Gráfico Pareto">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <img src="data:image/png;base64,{{ plot_timeline }}" class="img-fluid" alt="Gráfico Timeline">
+            </div>
+        </div>
     </div>
 </div>
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-warning m-4 text-center">
+            No hay datos suficientes para generar los gráficos.
+            <a href="/gestion" class="alert-link">Ve a Gestión</a> y añade ventas.
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}

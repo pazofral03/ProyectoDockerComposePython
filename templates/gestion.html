@@ -41,7 +41,7 @@
                         <input type="number" name="cantidad" class="form-control" required placeholder="Ej: 1">
                     </div>
                     <div class="mb-3">
-                        <label>Ingresos ($)</label>
+                        <label>Ingresos (€)</label>
                         <input type="number" name="ingresos" class="form-control" required step="0.01"
                             placeholder="Ej: 100.50">
                     </div>
@@ -77,12 +77,12 @@
                             </td>
                             <td>{{ venta.producto }}</td>
                             <td>{{ venta.cantidad }}</td>
-                            <td>${{ venta.ingresos }}</td>
+                            <td>{{ venta.ingresos }} €</td>
                             <td>
-                                <a href="/editar/{{ venta._id }}" class="btn btn-warning btn-sm">✎</a>
+                                <a href="/editar/{{ venta._id }}" class="btn btn-warning btn-sm">Editar</a>
 
                                 <a href="/eliminar/{{ venta._id }}" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('¿Seguro que quieres eliminar este registro?');">X</a>
+                                    onclick="return confirm('¿Seguro que quieres eliminar este registro?');">Eliminar</a>
                             </td>
                         </tr>
                         {% else %}
