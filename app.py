@@ -247,6 +247,36 @@ def eliminar(id):
     collection.delete_one({'_id': ObjectId(id)})
     return redirect(url_for('gestion'))
 
+@app.route('/editar/<id>')
+def editar(id):
+    """Muestra el formulario de edición con los datos cargados."""
+    # Buscamos el documento específico por ID
+    venta = collection.find_one({'_id': ObjectId(id)})
+    return render_template('editar.html', venta=venta)
+
+@app.route('/actualizar/<id>', methods=['POST'])
+def actualizar(id):
+    """Procesa la actualización en MongoDB."""
+    fecha_str = request.form['fecha']
+    try:
+        fecha_obj = datetime.strptime(fecha_str, '%Y-%m-%d')
+    except ValueError:
+        fecha_obj = datetime.now()
+
+    # Preparamos los nuevos datos
+    datos_actualizados = {
+        "producto": request.form['producto'],
+        "cantidad": int(request.form['cantidad']),
+        "ingresos": float(request.form['ingresos']),
+        "fecha": fecha_obj
+    }
+
+    # ACTUALIZAMOS en la base de datos ($set reemplaza solo los campos indicados)
+    collection.update_one({'_id': ObjectId(id)}, {'$set': datos_actualizados})
+    
+    flash('Registro actualizado correctamente', 'success')
+    return redirect(url_for('gestion'))
+
 @app.route('/sincronizar')
 def sincronizar():
     guardar_datos_en_json()

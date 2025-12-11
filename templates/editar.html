@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <strong>Editar Venta</strong>
+            </div>
+            <div class="card-body">
+                <form action="/actualizar/{{ venta._id }}" method="POST">
+                    
+                    <div class="mb-3">
+                        <label>Fecha de Venta</label>
+                        <input type="date" name="fecha" class="form-control" 
+                               value="{{ venta.fecha.strftime('%Y-%m-%d') }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Producto</label>
+                        <input type="text" name="producto" class="form-control" 
+                               value="{{ venta.producto }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Cantidad</label>
+                        <input type="number" name="cantidad" class="form-control" 
+                               value="{{ venta.cantidad }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Ingresos ($)</label>
+                        <input type="number" name="ingresos" class="form-control" step="0.01" 
+                               value="{{ venta.ingresos }}" required>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning">💾 Guardar Cambios</button>
+                        <a href="/gestion" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
