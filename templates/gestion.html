@@ -31,17 +31,19 @@
                         <label>Fecha de Venta</label>
                         <input type="date" name="fecha" class="form-control" required>
                     </div>
+
                     <div class="mb-3">
                         <label>Producto</label>
                         <input type="text" name="producto" class="form-control" required placeholder="Ej: Monitor">
                     </div>
                     <div class="mb-3">
                         <label>Cantidad</label>
-                        <input type="number" name="cantidad" class="form-control" required>
+                        <input type="number" name="cantidad" class="form-control" required placeholder="Ej: 1">
                     </div>
                     <div class="mb-3">
                         <label>Ingresos ($)</label>
-                        <input type="number" name="ingresos" class="form-control" required>
+                        <input type="number" name="ingresos" class="form-control" required step="0.01"
+                            placeholder="Ej: 100.50">
                     </div>
                     <button type="submit" class="btn btn-success w-100">Guardar en MongoDB</button>
                 </form>
@@ -51,11 +53,12 @@
 
     <div class="col-md-8">
         <div class="card shadow-sm">
-            <div class="card-header">Datos Actuales</div>
+            <div class="card-header">Historial de Ventas (Más recientes primero)</div>
             <div class="card-body">
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
+                            <th>Fecha</th>
                             <th>Producto</th>
                             <th>Cantidad</th>
                             <th>Ingresos</th>
@@ -65,16 +68,24 @@
                     <tbody>
                         {% for venta in ventas %}
                         <tr>
+                            <td>
+                                {% if venta.fecha %}
+                                {{ venta.fecha.strftime('%Y-%m-%d') }}
+                                {% else %}
+                                <span class="text-muted">--</span>
+                                {% endif %}
+                            </td>
                             <td>{{ venta.producto }}</td>
                             <td>{{ venta.cantidad }}</td>
-                            <td>{{ venta.ingresos }}</td>
+                            <td>${{ venta.ingresos }}</td>
                             <td>
-                                <a href="/eliminar/{{ venta._id }}" class="btn btn-danger btn-sm">X</a>
+                                <a href="/eliminar/{{ venta._id }}" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Seguro que quieres eliminar este registro?');">X</a>
                             </td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="4" class="text-center">Vacío</td>
+                            <td colspan="5" class="text-center text-muted">No hay datos registrados.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

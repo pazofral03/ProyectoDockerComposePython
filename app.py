@@ -23,32 +23,26 @@ db = client['mi_negocio']
 collection = db['ventas']
 BACKUP_FILE = 'datos_backup.json'
 
-# --- FUNCIONES AUXILIARES (BACKUP Y GIT) ---
+# --- FUNCIONES AUXILIARES ---
 
 def cargar_datos_desde_json():
-    """Al iniciar, si la DB está vacía, carga desde el JSON."""
     if os.path.exists(BACKUP_FILE):
         try:
             with open(BACKUP_FILE, 'r') as file:
-                # json_util se encarga de convertir {"$date": ...} a objetos datetime
                 data = json.load(file, object_hook=json_util.object_hook)
                 if data:
                     collection.insert_many(data)
                     print(f"--- DATOS RESTAURADOS DESDE {BACKUP_FILE} ---")
         except Exception as e:
             print(f"Error cargando JSON: {e}")
-    else:
-        print(f"--- No se encontró {BACKUP_FILE}, iniciando con base de datos vacía ---")
 
 def guardar_datos_en_json():
-    """Vuelca todo Mongo a un archivo JSON."""
     datos = list(collection.find())
     with open(BACKUP_FILE, 'w') as file:
         json.dump(datos, file, default=json_util.default, indent=4)
     print("--- BACKUP JSON CREADO ---")
 
 def ejecutar_git_push():
-    """Ejecuta comandos de git para subir TODO el proyecto."""
     usuario = os.environ.get('GITHUB_USER')
     token = os.environ.get('GITHUB_TOKEN')
     repo_url = os.environ.get('GITHUB_REPO')
@@ -76,18 +70,17 @@ def ejecutar_git_push():
         result = subprocess.run(["git", "push", "-u", "origin", "main"], capture_output=True, text=True)
         
         if result.returncode == 0:
-            return True, "Sincronización COMPLETA (Código + DB) exitosa."
+            return True, "Sincronización COMPLETA exitosa."
         else:
             return False, f"Error en Push: {result.stderr}"
 
     except Exception as e:
         return False, str(e)
 
-# --- LÓGICA DE KPI Y GRÁFICOS ---
+# --- LÓGICA DE NEGOCIO ---
 
 def obtener_kpis(ventas):
-    if not ventas:
-        return None
+    if not ventas: return None
     total_ingresos = sum(d['ingresos'] for d in ventas)
     ticket_medio = total_ingresos / len(ventas)
     prod_ingresos = {}
@@ -106,6 +99,7 @@ def preparar_datos_tarta(ventas):
         prod = v['producto']
         agrupado[prod] = agrupado.get(prod, 0) + v['ingresos']
     lista_ordenada = sorted(agrupado.items(), key=lambda x: x[1], reverse=True)
+    
     if len(lista_ordenada) > 5:
         top_5 = lista_ordenada[:5]
         otros_valor = sum(item[1] for item in lista_ordenada[5:])
@@ -126,37 +120,62 @@ def dashboard():
         return render_template('dashboard.html', plot_url=None, kpis=None)
 
     kpis = obtener_kpis(ventas)
-
-    # Asegurar fechas (parche para datos sin fecha)
-    for v in ventas:
-        if 'fecha' not in v:
-            v['fecha'] = datetime.now()
     
+    # Parche de fechas
+    for v in ventas:
+        if 'fecha' not in v: v['fecha'] = datetime.now()
     ventas_por_fecha = sorted(ventas, key=lambda x: x['fecha'])
 
-    # --- VISUALIZACIÓN ---
+    # --- CONFIGURACIÓN VISUAL ---
     plt.style.use('ggplot')
     fig, axs = plt.subplots(2, 2, figsize=(16, 12), facecolor='white')
-    mis_colores = plt.cm.tab20c(range(20))
 
-    # 1. Barras (Unidades)
+    # ==============================================================================
+    # 1. MAPEO DE COLORES CONSISTENTE (SOLUCIÓN A TU PROBLEMA)
+    # ==============================================================================
+    # Obtenemos lista única de todos los productos en la base de datos
+    todos_productos = sorted(list(set(v['producto'] for v in ventas)))
+    
+    # Generamos una paleta de colores fija
+    # 'tab20' tiene 20 colores distintos. Si tienes más productos, se repetirán ciclo.
+    paleta = plt.cm.tab20(range(len(todos_productos)))
+    
+    # Creamos el diccionario: { "Monitor": (0.1, 0.2, 0.5), "Ratón": ... }
+    product_colors = {prod: paleta[i % 20] for i, prod in enumerate(todos_productos)}
+    
+    # Añadimos manualmente el color para la categoría "Otros" (Gris claro)
+    product_colors['Otros'] = '#d3d3d3' 
+    # ==============================================================================
+
+    # --- GRÁFICO 1: BARRAS (Unidades) ---
     prod_agrupado = {}
     for v in ventas:
         prod_agrupado[v['producto']] = prod_agrupado.get(v['producto'], 0) + v['cantidad']
+    
+    lista_prods_barras = list(prod_agrupado.keys())
+    lista_vals_barras = list(prod_agrupado.values())
+    
+    # ASIGNAMOS COLORES: Buscamos el color de cada producto en el diccionario
+    colores_barras = [product_colors.get(p, '#333333') for p in lista_prods_barras]
+    
     ax1 = axs[0, 0]
-    ax1.bar(prod_agrupado.keys(), prod_agrupado.values(), color=mis_colores)
+    ax1.bar(lista_prods_barras, lista_vals_barras, color=colores_barras)
     ax1.set_title('Total Unidades Vendidas', fontsize=12, weight='bold')
     ax1.tick_params(axis='x', rotation=45, labelsize=9)
 
-    # 2. Tarta (Ingresos Top 5 + Otros)
+    # --- GRÁFICO 2: TARTA (Ingresos Top 5 + Otros) ---
     labels_pie, values_pie = preparar_datos_tarta(ventas)
+    
+    # ASIGNAMOS COLORES: Buscamos en el diccionario (incluyendo 'Otros')
+    colores_tarta = [product_colors.get(label, '#d3d3d3') for label in labels_pie]
+    
     ax2 = axs[0, 1]
     explode = [0.1] + [0]*(len(values_pie)-1) if values_pie else None
     ax2.pie(values_pie, labels=labels_pie, autopct='%1.1f%%', startangle=140, 
-            explode=explode, shadow=True, colors=mis_colores)
+            explode=explode, shadow=True, colors=colores_tarta) # Usamos la lista personalizada
     ax2.set_title('Ingresos (Top 5 + Otros)', fontsize=12, weight='bold')
 
-    # 3. Pareto (Ingresos)
+    # --- GRÁFICO 3: PARETO (Ingresos) ---
     ingresos_por_prod = {}
     for v in ventas:
         ingresos_por_prod[v['producto']] = ingresos_por_prod.get(v['producto'], 0) + v['ingresos']
@@ -166,15 +185,19 @@ def dashboard():
     total = sum(ingr_par)
     acumulado = [sum(ingr_par[:i+1])/total*100 for i in range(len(ingr_par))]
 
+    # ASIGNAMOS COLORES
+    colores_pareto = [product_colors.get(p, '#333333') for p in prods_par]
+
     ax3 = axs[1, 0]
-    ax3.bar(prods_par, ingr_par, color=mis_colores)
+    ax3.bar(prods_par, ingr_par, color=colores_pareto)
     ax3_twin = ax3.twinx()
     ax3_twin.plot(prods_par, acumulado, color='red', marker='o', linewidth=2)
     ax3_twin.axhline(80, color='gray', linestyle='--')
     ax3.set_title('Pareto de Ingresos', fontsize=12, weight='bold')
     ax3.tick_params(axis='x', rotation=45, labelsize=9)
 
-    # 4. Serie Temporal
+    # --- GRÁFICO 4: SERIE TEMPORAL ---
+    # Este no lleva colores por producto, es temporal global (usamos verde fijo)
     ax4 = axs[1, 1]
     fechas_map = {}
     for v in ventas_por_fecha:
@@ -208,7 +231,7 @@ def agregar():
     try:
         fecha_obj = datetime.strptime(fecha_str, '%Y-%m-%d')
     except ValueError:
-        fecha_obj = datetime.now() # Fallback
+        fecha_obj = datetime.now()
 
     nuevo_dato = {
         "producto": request.form['producto'],
@@ -235,8 +258,6 @@ def sincronizar():
     return redirect(url_for('gestion'))
 
 if __name__ == '__main__':
-    # SOLO cargamos datos si la colección está vacía y existe el JSON
     if collection.count_documents({}) == 0:
         cargar_datos_desde_json()
-        
     app.run(host='0.0.0.0', port=5000, debug=True)
