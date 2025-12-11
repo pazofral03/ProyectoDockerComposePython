@@ -3,14 +3,14 @@
 {% block content %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
 {% endwith %}
 
 <div class="row mb-4">
@@ -28,8 +28,12 @@
             <div class="card-body">
                 <form action="/agregar" method="POST">
                     <div class="mb-3">
+                        <label>Fecha de Venta</label>
+                        <input type="date" name="fecha" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
                         <label>Producto</label>
-                        <input type="text" name="producto" class="form-control" required>
+                        <input type="text" name="producto" class="form-control" required placeholder="Ej: Monitor">
                     </div>
                     <div class="mb-3">
                         <label>Cantidad</label>

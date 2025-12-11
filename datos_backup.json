@@ -1,26 +1,222 @@
 [
     {
         "_id": {
-            "$oid": "693ae46b98d09ee701a30386"
+            "$oid": "693af273ac3ef224b7031575"
         },
-        "producto": "Pixel 10",
-        "cantidad": 2,
-        "ingresos": 1500.0
-    },
-    {
-        "_id": {
-            "$oid": "693ae48298d09ee701a30387"
-        },
-        "producto": "Port\u00e1til",
+        "producto": "Mouse",
         "cantidad": 1,
-        "ingresos": 899.0
+        "ingresos": 279,
+        "fecha": {
+            "$date": "2025-12-10T16:33:55.207Z"
+        }
     },
     {
         "_id": {
-            "$oid": "693ae8700cc56c64679486fa"
+            "$oid": "693af273ac3ef224b7031576"
         },
-        "producto": "Agenda 2026",
+        "producto": "Webcam",
+        "cantidad": 3,
+        "ingresos": 654,
+        "fecha": {
+            "$date": "2025-12-05T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031577"
+        },
+        "producto": "Headset",
+        "cantidad": 3,
+        "ingresos": 456,
+        "fecha": {
+            "$date": "2025-12-10T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031578"
+        },
+        "producto": "Teclado",
+        "cantidad": 4,
+        "ingresos": 1180,
+        "fecha": {
+            "$date": "2025-12-01T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031579"
+        },
+        "producto": "Teclado",
+        "cantidad": 3,
+        "ingresos": 696,
+        "fecha": {
+            "$date": "2025-12-02T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b703157a"
+        },
+        "producto": "Monitor",
+        "cantidad": 3,
+        "ingresos": 966,
+        "fecha": {
+            "$date": "2025-12-09T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b703157b"
+        },
+        "producto": "Silla",
+        "cantidad": 3,
+        "ingresos": 135,
+        "fecha": {
+            "$date": "2025-12-11T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b703157c"
+        },
+        "producto": "Headset",
+        "cantidad": 2,
+        "ingresos": 408,
+        "fecha": {
+            "$date": "2025-12-06T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b703157d"
+        },
+        "producto": "Mouse",
+        "cantidad": 2,
+        "ingresos": 224,
+        "fecha": {
+            "$date": "2025-12-06T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b703157e"
+        },
+        "producto": "Headset",
+        "cantidad": 1,
+        "ingresos": 313,
+        "fecha": {
+            "$date": "2025-12-11T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b703157f"
+        },
+        "producto": "Laptop",
+        "cantidad": 2,
+        "ingresos": 952,
+        "fecha": {
+            "$date": "2025-12-01T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031580"
+        },
+        "producto": "Headset",
+        "cantidad": 3,
+        "ingresos": 1458,
+        "fecha": {
+            "$date": "2025-12-09T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031581"
+        },
+        "producto": "Webcam",
+        "cantidad": 3,
+        "ingresos": 1134,
+        "fecha": {
+            "$date": "2025-12-01T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031582"
+        },
+        "producto": "Teclado",
         "cantidad": 5,
-        "ingresos": 60.0
+        "ingresos": 635,
+        "fecha": {
+            "$date": "2025-12-08T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031583"
+        },
+        "producto": "Silla",
+        "cantidad": 4,
+        "ingresos": 1476,
+        "fecha": {
+            "$date": "2025-12-01T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031584"
+        },
+        "producto": "Headset",
+        "cantidad": 3,
+        "ingresos": 825,
+        "fecha": {
+            "$date": "2025-12-09T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031585"
+        },
+        "producto": "Webcam",
+        "cantidad": 5,
+        "ingresos": 1500,
+        "fecha": {
+            "$date": "2025-12-02T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031586"
+        },
+        "producto": "Escritorio",
+        "cantidad": 1,
+        "ingresos": 308,
+        "fecha": {
+            "$date": "2025-12-06T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031587"
+        },
+        "producto": "Teclado",
+        "cantidad": 5,
+        "ingresos": 380,
+        "fecha": {
+            "$date": "2025-12-01T16:33:55.207Z"
+        }
+    },
+    {
+        "_id": {
+            "$oid": "693af273ac3ef224b7031588"
+        },
+        "producto": "Teclado",
+        "cantidad": 2,
+        "ingresos": 432,
+        "fecha": {
+            "$date": "2025-12-11T16:33:55.207Z"
+        }
     }
 ]

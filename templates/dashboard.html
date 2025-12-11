@@ -1,19 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
+<div class="row mb-4">
     <div class="col-12 text-center">
-        <h1 class="display-5">Dashboard de Ventas</h1>
-        <p class="lead">Visualización generada con Matplotlib basada en datos reales de MongoDB.</p>
+        <h1 class="display-5">Dashboard Ejecutivo</h1>
+        <p class="text-muted">Análisis de ventas con KPIs y Evolución Temporal</p>
     </div>
 </div>
 
-<div class="card shadow-sm mt-4">
-    <div class="card-body text-center">
+{% if kpis %}
+<div class="row text-center mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3 shadow">
+            <div class="card-header">Ingreso Total</div>
+            <div class="card-body">
+                <h2 class="card-title">${{ kpis.total_ingresos }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 shadow">
+            <div class="card-header">Ticket Medio</div>
+            <div class="card-body">
+                <h2 class="card-title">${{ kpis.ticket_medio }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3 shadow">
+            <div class="card-header text-dark">Top Producto</div>
+            <div class="card-body text-dark">
+                <h2 class="card-title">{{ kpis.top_producto }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="card shadow-sm">
+    <div class="card-body text-center p-0">
         {% if plot_url %}
-            <img src="data:image/png;base64,{{ plot_url }}" class="img-fluid" alt="Gráfico de Ventas">
+        <img src="data:image/png;base64,{{ plot_url }}" class="img-fluid" alt="Gráfico de Ventas">
         {% else %}
-            <div class="alert alert-warning">No hay suficientes datos para generar gráficos. Ve a "Gestión de Datos".</div>
+        <div class="alert alert-warning m-4">No hay datos suficientes. Ve a Gestión y añade ventas con fechas
+            diferentes.</div>
         {% endif %}
     </div>
 </div>
