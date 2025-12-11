@@ -14,5 +14,13 @@
         "producto": "Port\u00e1til",
         "cantidad": 1,
         "ingresos": 899.0
+    },
+    {
+        "_id": {
+            "$oid": "693ae8700cc56c64679486fa"
+        },
+        "producto": "Agenda 2026",
+        "cantidad": 5,
+        "ingresos": 60.0
     }
 ]
