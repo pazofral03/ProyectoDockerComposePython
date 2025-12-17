@@ -272,25 +272,52 @@ def dashboard():
 
 @app.route('/producto/<nombre>')
 def producto_detalle(nombre):
-    # 1. Buscamos en Mongo todas las ventas que coincidan con ese nombre exacto
+    # 1. Buscamos en Mongo (ordenado por fecha descendente para la tabla)
     ventas_prod = list(collection.find({'producto': nombre}).sort("fecha", -1))
     
     if not ventas_prod:
         flash(f'No se encontraron datos para el producto "{nombre}".', 'warning')
         return redirect(url_for('gestion'))
 
-    # 2. Calculamos KPIs específicos para este producto al vuelo
+    # 2. Calculamos KPIs
     total_ingresos = sum(v['ingresos'] for v in ventas_prod)
     total_unidades = sum(v['cantidad'] for v in ventas_prod)
+
+    # 3. GENERAR GRÁFICO ESPECÍFICO (Timeline del producto)
+    # Para el gráfico necesitamos orden ascendente (antiguo -> nuevo)
+    # ventas_prod está descendente, así que lo invertimos para pintar
+    ventas_grafico = ventas_prod[::-1] 
     
-    # 3. Renderizamos la plantilla pasando los datos calculados
+    fechas = [v['fecha'] for v in ventas_grafico]
+    ingresos = [v['ingresos'] for v in ventas_grafico]
+
+    plt.style.use('ggplot')
+    fig, ax = plt.subplots(figsize=(8, 4))
+    
+    # Pintamos línea y puntos
+    ax.plot(fechas, ingresos, marker='o', linestyle='-', color='#0d6efd', linewidth=2)
+    
+    ax.set_title(f'Evolución de Ventas: {nombre}', fontsize=12, weight='bold')
+    ax.set_ylabel('Ingresos (€)', fontsize=10)
+    ax.set_xlabel('Fecha', fontsize=10)
+    
+    # Formato de fechas en el eje X
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    ax.tick_params(axis='x', rotation=45, labelsize=8)
+    ax.grid(True, linestyle='--', alpha=0.6)
+    
+    # Convertir a Base64 (usamos la función auxiliar que ya tenías)
+    plot_url = fig_to_base64(fig)
+
+    # 4. Renderizar
     return render_template('detalle.html', 
                            nombre=nombre, 
                            ventas=ventas_prod,
                            total_ingresos=total_ingresos,
-                           total_unidades=total_unidades)
+                           total_unidades=total_unidades,
+                           plot_url=plot_url) # <--- Pasamos el gráfico
 
-# ... (RESTO DE RUTAS: gestion, agregar, eliminar, sincronizar, editar, actualizar IGUALES) ...
+
 @app.route('/gestion')
 def gestion():
     ventas = list(collection.find().sort("fecha", -1))

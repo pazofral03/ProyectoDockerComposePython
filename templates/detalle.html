@@ -31,6 +31,17 @@
     </div>
 
     <div class="col-md-8">
+        
+        <div class="card shadow-sm mb-4">
+            <div class="card-body text-center">
+                {% if plot_url %}
+                    <img src="data:image/png;base64,{{ plot_url }}" class="img-fluid rounded" alt="Gráfico Evolución">
+                {% else %}
+                    <p class="text-muted">No hay suficientes datos para generar la gráfica.</p>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="card shadow-sm">
             <div class="card-header bg-white">
                 <strong>Historial de transacciones: {{ nombre }}</strong>
