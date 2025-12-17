@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/gestion">Gestión</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ nombre }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow border-0 bg-primary text-white">
+            <div class="card-body">
+                <h3 class="card-title">{{ nombre }}</h3>
+                <hr>
+                <p class="card-text mb-1">💰 Ingresos Totales:</p>
+                <h2 class="font-weight-bold">{{ "{:,.2f}".format(total_ingresos) }} €</h2>
+                <p class="card-text mb-1 mt-3">📦 Unidades Vendidas:</p>
+                <h4>{{ total_unidades }}</h4>
+            </div>
+        </div>
+        <div class="d-grid gap-2 mt-3">
+            <a href="/gestion" class="btn btn-outline-secondary">← Volver al listado</a>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <strong>Historial de transacciones: {{ nombre }}</strong>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Cantidad</th>
+                            <th>Ingresos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for venta in ventas %}
+                        <tr>
+                            <td>
+                                {% if venta.fecha %}
+                                    {{ venta.fecha.strftime('%Y-%m-%d') }}
+                                {% else %}--{% endif %}
+                            </td>
+                            <td>{{ venta.cantidad }}</td>
+                            <td>{{ venta.ingresos }} €</td>
+                            <td>
+                                <a href="/editar/{{ venta._id }}" class="btn btn-warning btn-sm">✎</a>
+                                <a href="/eliminar/{{ venta._id }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Borrar?');">X</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

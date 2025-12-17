@@ -75,7 +75,11 @@
                                 <span class="text-muted">--</span>
                                 {% endif %}
                             </td>
-                            <td>{{ venta.producto }}</td>
+                            <td>
+    <a href="/producto/{{ venta.producto }}" class="text-decoration-none fw-bold text-primary">
+        {{ venta.producto }} 🔗
+    </a>
+</td>
                             <td>{{ venta.cantidad }}</td>
                             <td>{{ venta.ingresos }} €</td>
                             <td>

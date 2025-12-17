@@ -270,7 +270,25 @@ def dashboard():
                            filtro_tiempo=filtro_tiempo,
                            filtro_orden=filtro_orden)
 
+@app.route('/producto/<nombre>')
+def producto_detalle(nombre):
+    # 1. Buscamos en Mongo todas las ventas que coincidan con ese nombre exacto
+    ventas_prod = list(collection.find({'producto': nombre}).sort("fecha", -1))
+    
+    if not ventas_prod:
+        flash(f'No se encontraron datos para el producto "{nombre}".', 'warning')
+        return redirect(url_for('gestion'))
 
+    # 2. Calculamos KPIs específicos para este producto al vuelo
+    total_ingresos = sum(v['ingresos'] for v in ventas_prod)
+    total_unidades = sum(v['cantidad'] for v in ventas_prod)
+    
+    # 3. Renderizamos la plantilla pasando los datos calculados
+    return render_template('detalle.html', 
+                           nombre=nombre, 
+                           ventas=ventas_prod,
+                           total_ingresos=total_ingresos,
+                           total_unidades=total_unidades)
 
 # ... (RESTO DE RUTAS: gestion, agregar, eliminar, sincronizar, editar, actualizar IGUALES) ...
 @app.route('/gestion')
