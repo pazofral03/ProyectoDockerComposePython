@@ -67,8 +67,8 @@
                             <td>{{ venta.cantidad }}</td>
                             <td>{{ venta.ingresos }} €</td>
                             <td>
-                                <a href="/editar/{{ venta._id }}" class="btn btn-warning btn-sm">✎</a>
-                                <a href="/eliminar/{{ venta._id }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Borrar?');">X</a>
+                                <a href="/editar/{{ venta._id }}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="/eliminar/{{ venta._id }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Borrar?');">Eliminar</a>
                             </td>
                         </tr>
                         {% endfor %}
